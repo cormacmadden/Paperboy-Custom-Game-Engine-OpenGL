@@ -1,0 +1,57 @@
+#version 330
+
+layout (location = 0) in vec3 vertex_position;
+layout (location = 1) in vec2 vertex_texture;
+layout (location = 2) in vec3 vertex_normal;
+
+out float DiffuseFactor;
+out vec2 TexCoord0;
+out float visibility;
+out vec3 Normal0;
+out vec3 FragPos;
+
+struct DirectionalLight
+{
+	vec3 Color;
+	float AmbientIntensity;
+	float DiffuseIntensity;
+	vec3 Direction;
+};
+
+uniform mat4 view;
+uniform mat4 proj;
+uniform mat4 world;
+uniform DirectionalLight gLight;
+
+const float density = 0.007;
+const float gradient = 1.5;
+
+void main(){
+  TexCoord0 = vertex_texture;
+
+  //FOG
+  vec4 worldPosition = world * vec4(vertex_position,1.0);
+  vec4 positionRelativeToCam = view * worldPosition;
+  float distance = length(positionRelativeToCam.xyz);
+  visibility = exp(-pow((distance*density),gradient));
+  visibility = clamp(visibility, 0.0,1.0);
+
+
+  //DIFFUSE SHADING
+  mat3 World3f = mat3(world);
+  mat3 WorldToLocal = transpose(World3f);
+  vec3 LightDirectionW = vec3(0.5f, -0.25f, 0.15f);
+  vec3 LightDirectionL = WorldToLocal * LightDirectionW;
+  LightDirectionL = normalize(LightDirectionL);
+  
+  DiffuseFactor = dot(normalize(vertex_normal),-LightDirectionL);
+  
+  // Convert position to clip coordinates and pass along
+  Normal0 = vertex_normal;
+  FragPos = vec3(world * vec4(vertex_position,1.0));
+  gl_Position = proj*view*world * vec4(vertex_position,1.0);
+
+}
+
+
+  
