@@ -38,7 +38,6 @@ private:
 	GLuint loc1, loc2, loc3;
 	unsigned int vp_vbo, vn_vbo, vao, ebo, vt_vbo;
 
-
 	enum BUFFER_TYPE {
 		INDEX_BUFFER = 0,
 		POS_VB = 1,
@@ -66,7 +65,6 @@ private:
 
 	std::vector<BasicMeshEntry> m_Meshes;
 	//std::vector<Material> m_Materials;
-
 	std::vector<vec3> m_Positions;
 	std::vector<vec3> m_Normals;
 	std::vector<vec2> m_TexCoords;
