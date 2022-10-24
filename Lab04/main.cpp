@@ -10,7 +10,7 @@
 #include <vector> // STL dynamic memory.
 #include "Camera.h"
 #include "Shader.h"
-#include "Seal.h"
+#include "PaperBoy.h"
 #include "Utils.h"
 // OpenGL includes
 #include <GL/glew.h>
@@ -23,7 +23,6 @@
 
 #include "Mesh.h"
 #include "Model.h"
-#include "Crowd.h"
 // Project includes
 //#include "maths_funcs.h"
 //#include <glm/glm/glm.hpp>
@@ -65,10 +64,8 @@ Shader myShader;
 Shader skyShader;
 Model terrain;
 Model sphere;
-Seal mySeal;
+PaperBoy paperboy;
 mat4 gWVP;
-Crowd myCrowd;
-Boid myBoid;
 
 void display() {
 
@@ -84,7 +81,6 @@ void display() {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	
 	//glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 	glClearColor(skyR, skyG, skyB, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -126,9 +122,7 @@ void display() {
 	terrain_mat = translate(terrain_mat, vec3(-10.0, 10.0, 10.0));
 	terrain.RenderModel(terrain_mat, myShader.ID);
 
-	myCrowd.renderBoids(world, myShader.ID);
-	myCrowd.flocking();
-	mySeal.renderSeal(world, myShader.ID);
+	paperboy.renderPaperBoy(world, myShader.ID);
 
 	glutSwapBuffers();
 }
@@ -173,18 +167,18 @@ void updateCamera() {
 
 void updateSeal() {
 	if (keyStates['i'] == true) {
-		mySeal.ProcessKeyboard(FORWARD, delta);
+		paperboy.ProcessKeyboard(FORWARD, delta);
 	}
 	if (keyStates['k'] == true) {
-		mySeal.ProcessKeyboard(BACKWARD, delta);
+		paperboy.ProcessKeyboard(BACKWARD, delta);
 	}
 	if (keyStates['l'] == true) {
-		mySeal.ProcessKeyboard(RIGHT, delta);
+		paperboy.ProcessKeyboard(RIGHT, delta);
 	}
 	if (keyStates['j'] == true) {
-		mySeal.ProcessKeyboard(LEFT, delta);
+		paperboy.ProcessKeyboard(LEFT, delta);
 	}
-	mySeal.calculateFlap(delta);
+	//paperboy.calculateFlap(delta);
 }
 
 void updateScene() {
@@ -195,7 +189,6 @@ void updateScene() {
 	delta = (curr_time - last_time) * 0.001f;
 	last_time = curr_time;
 
-	myCrowd.setDeltaTime(delta);
 	updateSeal();
 	updateCamera();
 	glutPostRedisplay();
@@ -204,12 +197,11 @@ void updateScene() {
 void init()
 {
 	// Set up the models and shaders
-	myShader = Shader("D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\simpleVertexShader.txt","D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\simpleFragmentShader.txt");
-	skyShader = Shader("D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\simpleVertexShader.txt", "D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\skyShader.txt");
-	mySeal = Seal(vec3(0.0f, 0.0f, 0.0f));
-	terrain = Model("D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\Terrain.obj");
-	sphere = Model("D:\\Personal\\College\\Computer Graphics\\GitHub\\ComputerGraphicsProject\\SphereScene.obj");
-	myCrowd.generateBoids();
+	myShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt","D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleFragmentShader.txt");
+	skyShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt", "D:\\Personal\\College\\5thYear\\ComputerGraphics\\skyShader.txt");
+	paperboy = PaperBoy(vec3(0.0f, 0.0f, 0.0f));
+	terrain = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Terrain.obj");
+	sphere = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\SphereScene.obj");
 	pTexture = new Texture(GL_TEXTURE_2D, "BlueTexture.jpeg");
 	sphereTexture = new Texture(GL_TEXTURE_2D, "sunflowers_2k.hdr");
 

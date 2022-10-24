@@ -39,10 +39,7 @@
     <ClCompile Include="Seal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crowd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Boid.cpp">
+    <ClCompile Include="Paperboy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,10 +80,7 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Crowd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Boid.h">
+    <ClInclude Include="Paperboy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,5 +94,8 @@
     <Text Include="..\skyShader.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

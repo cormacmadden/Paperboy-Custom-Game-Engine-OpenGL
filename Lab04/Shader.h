@@ -4,13 +4,11 @@
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include "maths_funcs.h"
-
 
 class Shader
 {

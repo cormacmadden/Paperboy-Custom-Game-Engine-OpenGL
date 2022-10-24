@@ -82,12 +82,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Boid.cpp" />
-    <ClCompile Include="Crowd.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="maths_funcs.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Paperboy.cpp" />
     <ClCompile Include="Seal.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -95,13 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libs\glm\glm\glm.hpp" />
-    <ClInclude Include="Boid.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Crowd.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="maths_funcs.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Paperboy.h" />
     <ClInclude Include="Seal.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
@@ -113,6 +111,9 @@
     <Text Include="..\simpleFragmentShader.txt" />
     <Text Include="..\simpleVertexShader.txt" />
     <Text Include="..\skyShader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

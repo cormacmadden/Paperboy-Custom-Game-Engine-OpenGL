@@ -17,7 +17,7 @@ public:
 	Model seal;
 	GLfloat rotate_y = 0.0f;
 	GLfloat rotate_y_sin = 0.0f;
-	//boid 
+	//boid
 
 
 	Seal();
