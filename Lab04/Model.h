@@ -51,6 +51,7 @@ class Model {
 public:
 	//static vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
+	//Not Used
 	std::vector<Mesh> meshes;
 	std::vector<Mesh> textures;
 
@@ -62,7 +63,7 @@ public:
 
 	void RenderModel(mat4 transform, unsigned int shaderID);
 	void RenderMesh(mat4 transform, unsigned int shaderID, int meshIndex);
-
+	int getNumberMeshes();
 	const Material& GetMaterial();
 
 

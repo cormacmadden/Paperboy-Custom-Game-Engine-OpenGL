@@ -402,3 +402,7 @@ bool Model::InitMaterials(const aiScene* pScene, const string& Filename)
 
 	return Ret;
 }
+
+int Model::getNumberMeshes() {
+	return m_Meshes.size();
+}

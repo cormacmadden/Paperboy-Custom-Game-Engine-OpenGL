@@ -23,7 +23,8 @@ uniform mat4 proj;
 uniform mat4 world;
 uniform DirectionalLight gLight;
 
-const float density = 0.007;
+//was 0.007
+const float density = 0.000;
 const float gradient = 1.5;
 
 void main(){

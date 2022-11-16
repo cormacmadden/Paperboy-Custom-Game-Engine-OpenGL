@@ -66,15 +66,16 @@ Model terrain;
 Model sphere;
 PaperBoy paperboy;
 mat4 gWVP;
+Model paper;
 
 void display() {
-
+	//Transparancy
 	if (trans == true) {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	} //Transparancy
+	} 
 	else if (trans == false) {
 		glDisable(GL_BLEND);
 		glDisable(GL_CULL_FACE);
@@ -118,16 +119,13 @@ void display() {
 	myShader.use();
 
 	mat4 terrain_mat = identity_mat4();
-	terrain_mat = scale(terrain_mat, vec3(10.0, 10.0, 10.0));
-	terrain_mat = translate(terrain_mat, vec3(-10.0, 10.0, 10.0));
+	terrain_mat = translate(terrain_mat, vec3(0.0, 00.0, 0.0));
 	terrain.RenderModel(terrain_mat, myShader.ID);
 
 	paperboy.renderPaperBoy(world, myShader.ID);
 
 	glutSwapBuffers();
 }
-
-
 
 void updateCamera() {
 	if (keyStates['w'] == true) { //move cam forward
@@ -165,7 +163,7 @@ void updateCamera() {
 	}
 }
 
-void updateSeal() {
+void updatePaperboy() {
 	if (keyStates['i'] == true) {
 		paperboy.ProcessKeyboard(FORWARD, delta);
 	}
@@ -178,6 +176,9 @@ void updateSeal() {
 	if (keyStates['j'] == true) {
 		paperboy.ProcessKeyboard(LEFT, delta);
 	}
+	if (keyStates['v'] == true) {
+		paperboy.throwPapers(paper, myShader, paperboy.remainingPapers);
+	}
 	//paperboy.calculateFlap(delta);
 }
 
@@ -189,7 +190,7 @@ void updateScene() {
 	delta = (curr_time - last_time) * 0.001f;
 	last_time = curr_time;
 
-	updateSeal();
+	updatePaperboy();
 	updateCamera();
 	glutPostRedisplay();
 }
@@ -200,11 +201,11 @@ void init()
 	myShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt","D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleFragmentShader.txt");
 	skyShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt", "D:\\Personal\\College\\5thYear\\ComputerGraphics\\skyShader.txt");
 	paperboy = PaperBoy(vec3(0.0f, 0.0f, 0.0f));
-	terrain = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Terrain.obj");
+	terrain = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Map.obj");
 	sphere = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\SphereScene.obj");
 	pTexture = new Texture(GL_TEXTURE_2D, "BlueTexture.jpeg");
 	sphereTexture = new Texture(GL_TEXTURE_2D, "sunflowers_2k.hdr");
-
+	paper = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Newspaper.obj");
 }
 
 void mouseCallback(int x, int y) {
@@ -270,7 +271,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Hello Triangle");
+	glutCreateWindow("Paperboy");
 
 	// Tell glut where the display function is
 	glutDisplayFunc(display);
