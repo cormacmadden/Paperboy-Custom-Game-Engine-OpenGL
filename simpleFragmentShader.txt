@@ -3,8 +3,9 @@ in vec2 TexCoord0;
 in float visibility;
 in vec3 Normal;
 in vec3 FragPos;
+in mat4 World;
 
-in float DiffuseFactor;
+
 vec3 directColor = vec3 (1.0, 1.0, 1.0); // White diffuse surface reflectance
 vec3 directIntensity = vec3 (3.0, 3.0, 3.0); // Light source intensity
 
@@ -32,6 +33,15 @@ uniform float alpha;
 
 
 void main(){
+
+	//DIFFUSE SHADING
+	mat3 World3f = mat3(World);
+	mat3 WorldToLocal = transpose(World3f);
+	vec3 LightDirectionW = vec3(0.5f, -1.0f, 0.15f);
+	vec3 LightDirectionL = WorldToLocal * LightDirectionW;
+	LightDirectionL = normalize(LightDirectionL);
+  
+	float DiffuseFactor = dot(normalize(Normal),-LightDirectionL);
 
     float ambientStrength = 0.9;
     vec3 ambient = ambientStrength * vec3(1.0f, 1.0f, 1.0f); //Light Color

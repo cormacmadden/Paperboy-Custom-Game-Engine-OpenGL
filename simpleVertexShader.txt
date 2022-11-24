@@ -4,11 +4,11 @@ layout (location = 0) in vec3 vertex_position;
 layout (location = 1) in vec2 vertex_texture;
 layout (location = 2) in vec3 vertex_normal;
 
-out float DiffuseFactor;
 out vec2 TexCoord0;
 out float visibility;
 out vec3 Normal;
 out vec3 FragPos;
+out mat4 World;
 
 struct DirectionalLight
 {
@@ -37,16 +37,8 @@ void main(){
   visibility = exp(-pow((distance*density),gradient));
   visibility = clamp(visibility, 0.0,1.0);
 
+  World = world;
 
-  //DIFFUSE SHADING
-  mat3 World3f = mat3(world);
-  mat3 WorldToLocal = transpose(World3f);
-  vec3 LightDirectionW = vec3(0.5f, -1.0f, 0.15f);
-  vec3 LightDirectionL = WorldToLocal * LightDirectionW;
-  LightDirectionL = normalize(LightDirectionL);
-  
-  DiffuseFactor = dot(normalize(vertex_normal),-LightDirectionL);
-  
   // Convert position to clip coordinates and pass along
   Normal = vertex_normal;
   FragPos = vec3(world * vec4(vertex_position,1.0));
