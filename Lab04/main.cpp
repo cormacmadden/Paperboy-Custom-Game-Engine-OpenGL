@@ -69,7 +69,7 @@ mat4 gWVP;
 Model paper;
 
 void display() {
-	//Transparancy
+	//Transparency
 	if (trans == true) {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -86,16 +86,13 @@ void display() {
 	glClearColor(skyR, skyG, skyB, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Declare your uniform variables that will be used in your shader
+	//get uniform location from shader
 	int view_loc = glGetUniformLocation(myShader.ID, "view");
-	int proj_loc = glGetUniformLocation(myShader.ID, "proj");
+	int proj_loc =	 glGetUniformLocation(myShader.ID, "proj");
+	int view_pos_loc = glGetUniformLocation(myShader.ID, "viewPos");
+	//get sky uniform locs
 	int view_loc1 = glGetUniformLocation(skyShader.ID, "view");
 	int proj_loc1 = glGetUniformLocation(skyShader.ID, "proj");
-	int skyColor_loc = glGetUniformLocation(myShader.ID, "skyColor");
-	int light_dir_loc = glGetUniformLocation(myShader.ID, "gLight.Direction");
-	int light_color_loc = glGetUniformLocation(myShader.ID, "lightColor");
-	int light_pos_loc = glGetUniformLocation(myShader.ID, "lightPos");
-	int view_pos_loc = glGetUniformLocation(myShader.ID, "viewPos");
 
 	mat4 persp_proj = perspective(45.0f, (float)width / (float)height, 0.1f, 1000.0f);
 	mat4 view = camera.GetViewMatrix();
@@ -110,20 +107,12 @@ void display() {
 		world = scale(world, vec3(2.0f, 2.0f, 2.0f));
 		sphere.RenderModel(world * view, skyShader.ID);
 	}
-	vec3 lightCol = vec3(1.0f,1.0f,1.0f);
-	vec3 lightPos = vec3(0.5f, 15.5f, 0.15f);
-	//glUniform3fv(light_color_loc, 1, &lightCol[0]);
-
-	glUniform3fv(light_pos_loc, 1, &lightPos.v[0]);
 	glUniform3f(view_pos_loc, camera.Pos.v[0], camera.Pos.v[1], camera.Pos.v[2]);
 	myShader.use();
-
 	mat4 terrain_mat = identity_mat4();
 	terrain_mat = translate(terrain_mat, vec3(0.0, 00.0, 0.0));
 	terrain.RenderModel(terrain_mat, myShader.ID);
-
 	paperboy.renderPaperBoy(world, myShader.ID);
-
 	glutSwapBuffers();
 }
 
@@ -203,7 +192,7 @@ void init()
 	paperboy = PaperBoy(vec3(0.0f, 0.0f, 0.0f));
 	terrain = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Map.obj");
 	sphere = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\SphereScene.obj");
-	pTexture = new Texture(GL_TEXTURE_2D, "BlueTexture.jpeg");
+	pTexture = new Texture(GL_TEXTURE_2D, "b94cc9753e674518e4bb3ef1bc3fd9f3.jpg");
 	sphereTexture = new Texture(GL_TEXTURE_2D, "sunflowers_2k.hdr");
 	paper = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Newspaper.obj");
 }
