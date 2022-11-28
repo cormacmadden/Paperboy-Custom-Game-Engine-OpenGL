@@ -39,6 +39,7 @@ MESH TO LOAD
 
 #define MESH_NAME "monkeyhead_smooth.dae"
 Camera camera;
+Camera isometricCamera;
 int width = 1400;
 int height = 700;
 bool firstMouse = true;
@@ -90,16 +91,12 @@ void display() {
 	int view_loc = glGetUniformLocation(myShader.ID, "view");
 	int proj_loc =	 glGetUniformLocation(myShader.ID, "proj");
 	int view_pos_loc = glGetUniformLocation(myShader.ID, "viewPos");
-	//get sky uniform locs
-	int view_loc1 = glGetUniformLocation(skyShader.ID, "view");
-	int proj_loc1 = glGetUniformLocation(skyShader.ID, "proj");
 
 	mat4 persp_proj = perspective(45.0f, (float)width / (float)height, 0.1f, 1000.0f);
+	mat4 iso_proj = perspective(10.0f, (float)width / (float)height, 0.1f, 1000.0f);
 	mat4 view = camera.GetViewMatrix();
 	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, persp_proj.m);
 	glUniformMatrix4fv(view_loc, 1, GL_FALSE, view.m);
-	glUniformMatrix4fv(proj_loc1, 1, GL_FALSE, persp_proj.m);
-	glUniformMatrix4fv(view_loc1, 1, GL_FALSE, view.m);
 
 	mat4 world = identity_mat4();
 	if (skyMap == true) {
@@ -168,7 +165,9 @@ void updatePaperboy() {
 	if (keyStates['v'] == true) {
 		paperboy.throwPapers(paper, myShader, paperboy.remainingPapers);
 	}
-	//paperboy.calculateFlap(delta);
+	if (keyStates['i'] == true) {
+		paperboy.spinWheels(delta);
+	}
 }
 
 void updateScene() {

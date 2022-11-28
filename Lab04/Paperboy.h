@@ -17,7 +17,7 @@ public:
 	float MovementSpeed;
 	Model paperboy;
 	GLfloat rotate_y = 0.0f;
-	GLfloat rotate_y_sin = 0.0f;
+	GLfloat rotate_y_sin = 00.0f;
 	int remainingPapers = 10;
 	float health;
 
@@ -28,6 +28,8 @@ public:
 	void ProcessKeyboard(MovementDir direction, float deltaTime);
 	void MovePaperBoy(int x, int y, float deltaTime);
 	void throwPapers(Model paper, Shader myShader, int remainingPapers);
+
+	void spinWheels(float delta);
 
 	float convert(float degree) {
 		float pi = M_PI;
