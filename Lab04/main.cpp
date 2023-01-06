@@ -8,36 +8,25 @@
 #include <stdio.h>
 #include <math.h>
 #include <vector> // STL dynamic memory.
-#include "Camera.h"
+
 #include "Shader.h"
-#include "PaperBoy.h"
+
 #include "Utils.h"
 // OpenGL includes
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-// Assimp includes
-#include <assimp/cimport.h> // scene importer
-#include <assimp/scene.h> // collects data
-#include <assimp/postprocess.h> // various extra operations
-
-#include "Mesh.h"
-#include "Model.h"
+//#include "Model.h"
 // Project includes
 //#include "maths_funcs.h"
 //#include <glm/glm/glm.hpp>
 //#include <glm/glm/gtc/matrix_transform.hpp>
 //#include <glm/glm/gtc/type_ptr.hpp>
 #include "maths_funcs.h"
-/*----------------------------------------------------------------------------
-MESH TO LOAD
-----------------------------------------------------------------------------*/
-// this mesh is a dae file format but you should be able to use any other format too, obj is typically what is used
-// put the mesh in your project directory, or provide a filepath for it here
+#include "PaperBoy.h"
+#include "Camera.h"
+#include "Newspaper.h"
 
-//test commit
-
-#define MESH_NAME "monkeyhead_smooth.dae"
 Camera camera;
 Camera isometricCamera;
 int width = 1400;
@@ -56,6 +45,7 @@ float skyG = 0.87f;
 float skyB = 0.96f;
 bool trans = false;
 bool skyMap = false;
+bool fog = false;
 
 using namespace std;
 
@@ -67,7 +57,9 @@ Model terrain;
 Model sphere;
 PaperBoy paperboy;
 mat4 gWVP;
-Model paper;
+Newspaper paper;
+Model hedges;
+Newspaper *newspapers;
 
 void display() {
 	//Transparency
@@ -76,7 +68,7 @@ void display() {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	} 
+	}
 	else if (trans == false) {
 		glDisable(GL_BLEND);
 		glDisable(GL_CULL_FACE);
@@ -89,64 +81,87 @@ void display() {
 
 	//get uniform location from shader
 	int view_loc = glGetUniformLocation(myShader.ID, "view");
-	int proj_loc =	 glGetUniformLocation(myShader.ID, "proj");
+	int proj_loc = glGetUniformLocation(myShader.ID, "proj");
 	int view_pos_loc = glGetUniformLocation(myShader.ID, "viewPos");
-
-	mat4 persp_proj = perspective(45.0f, (float)width / (float)height, 0.1f, 1000.0f);
-	mat4 iso_proj = perspective(10.0f, (float)width / (float)height, 0.1f, 1000.0f);
+	int fog_loc = glGetUniformLocation(myShader.ID, "density");
+	skyShader.setFloat("density", 0.007);
+	int fog_loc2 = glGetUniformLocation(skyShader.ID, "density");
+	if (fog == true) {
+		glUniform1f(fog_loc, 0.007);
+		glUniform1f(fog_loc2, 0.007);
+	}
+	else {
+		glUniform1f(fog_loc, 0.000);
+		glUniform1f(fog_loc2, 0.000);
+	}
+	mat4 persp_proj = perspective(camera.Fov, (float)width / (float)height, 0.1f, 1000.0f);
 	mat4 view = camera.GetViewMatrix();
 	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, persp_proj.m);
 	glUniformMatrix4fv(view_loc, 1, GL_FALSE, view.m);
-
 	mat4 world = identity_mat4();
+	mat4 sky_mat = identity_mat4();
+	
 	if (skyMap == true) {
 		skyShader.use();
-		world = scale(world, vec3(2.0f, 2.0f, 2.0f));
-		sphere.RenderModel(world * view, skyShader.ID);
+		sky_mat = scale(sky_mat, vec3(3.2f, 3.2f, 3.2f));
+		sky_mat = translate(sky_mat, vec3(0.0f, 17.0f, 0.0f));
+		//sky_mat = translate(sky_mat, camera.Pos);
+		//sky_mat = rotate_y_deg(sky_mat, camera.Yaw);
+		vec4 pos = sky_mat * vec4(camera.Pos, 0.0f);
+		vec3 pos1 = vec3(pos.v[0], pos.v[1], pos.v[2]);
+		sphere.RenderModel(view, skyShader.ID);
 	}
+
+
+	//myShader.setVec3("dirLight.direction", vec3(-0.2f, -1.0f, -0.3f));
+	//myShader.setVec3("dirLight.ambient", vec3(0.05f, 0.05f, 0.05f));
+	//myShader.setVec3("dirLight.diffuse", vec3(0.4f, 0.4f, 0.4f));
+	//myShader.setVec3("dirLight.specular", vec3(0.5f, 0.5f, 0.5f));
 	glUniform3f(view_pos_loc, camera.Pos.v[0], camera.Pos.v[1], camera.Pos.v[2]);
 	myShader.use();
 	mat4 terrain_mat = identity_mat4();
 	terrain_mat = translate(terrain_mat, vec3(0.0, 00.0, 0.0));
 	terrain.RenderModel(terrain_mat, myShader.ID);
+
+	hedges.RenderModel(terrain_mat, myShader.ID);
+
+	mat4 paper_mat = identity_mat4();
+
+	for (int i = 0; i < paperboy.remainingPapers; i++) {
+		newspapers[i].renderNewspaper(paper_mat, myShader.ID);
+	}
+
 	paperboy.renderPaperBoy(world, myShader.ID);
 	glutSwapBuffers();
 }
 
 void updateCamera() {
-	if (keyStates['w'] == true) { //move cam forward
-		camera.ProcessKeyboard(FORWARD, delta);
+	if (camera.freeCam == true) {
+		if (keyStates['w'] == true) { //move cam forward
+			camera.ProcessKeyboard(FORWARD, delta);
+		}
+		if (keyStates['a'] == true) {//mpve cam left
+			camera.ProcessKeyboard(LEFT, delta);
+		}
+		if (keyStates['d'] == true) {//move cam right
+			camera.ProcessKeyboard(RIGHT, delta);
+		}
+		if (keyStates['s'] == true) {//move cam backward
+			camera.ProcessKeyboard(BACKWARD, delta);
+		}
+		if (keyStates['q'] == true) {//move cam backward
+			camera.ProcessKeyboard(DOWN, delta);
+		}
+		if (keyStates['e'] == true) {//move cam backward
+			camera.ProcessKeyboard(UP, delta);
+		}
+
 	}
-	if (keyStates['a'] == true) {//mpve cam left
-		camera.ProcessKeyboard(LEFT, delta);
+	else if (camera.thirdPerson == true) {
+		camera.processThirdPerson(paperboy.Pos, paperboy.Front);
 	}
-	if (keyStates['d'] == true) {//move cam right
-		camera.ProcessKeyboard(RIGHT, delta);
-	}
-	if (keyStates['s'] == true) {//move cam backward
-		camera.ProcessKeyboard(BACKWARD, delta);
-	}
-	if (keyStates['q'] == true) {//move cam backward
-		camera.ProcessKeyboard(DOWN, delta);
-	}
-	if (keyStates['e'] == true) {//move cam backward
-		camera.ProcessKeyboard(UP, delta);
-	}
-	if (keyStates['t'] == true) {//move cam backward
-		trans = true;
-	}
-	if (keyStates['y'] == true) {//move cam backward
-		trans = false;
-	}
-	if (keyStates['b'] == true) {//move cam backward
-		skyMap = true;
-	}
-	if (keyStates['n'] == true) {//move cam backward
-		skyMap = false;
-	}
-	if (keyStates['z'] == true) {//move light backward
-		skyMap = false;
-	}
+	else if (camera.originalCamera == true)
+		camera.processIso(paperboy.Pos, paperboy.Front);
 }
 
 void updatePaperboy() {
@@ -161,9 +176,6 @@ void updatePaperboy() {
 	}
 	if (keyStates['j'] == true) {
 		paperboy.ProcessKeyboard(LEFT, delta);
-	}
-	if (keyStates['v'] == true) {
-		paperboy.throwPapers(paper, myShader, paperboy.remainingPapers);
 	}
 	if (keyStates['i'] == true) {
 		paperboy.spinWheels(delta);
@@ -188,12 +200,22 @@ void init()
 	// Set up the models and shaders
 	myShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt","D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleFragmentShader.txt");
 	skyShader = Shader("D:\\Personal\\College\\5thYear\\ComputerGraphics\\simpleVertexShader.txt", "D:\\Personal\\College\\5thYear\\ComputerGraphics\\skyShader.txt");
-	paperboy = PaperBoy(vec3(0.0f, 0.0f, 0.0f));
+	paperboy = PaperBoy(vec3(0.5f, 0.1f, 2.0f));
 	terrain = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Map.obj");
-	sphere = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\SphereScene.obj");
-	pTexture = new Texture(GL_TEXTURE_2D, "b94cc9753e674518e4bb3ef1bc3fd9f3.jpg");
+	sphere = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\SphereScene.obj");
+	hedges = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Hedges.obj");
+	pTexture = new Texture(GL_TEXTURE_2D, "qG00I.png");
 	sphereTexture = new Texture(GL_TEXTURE_2D, "sunflowers_2k.hdr");
-	paper = Model("D:\\Personal\\College\\5thYear\\ComputerGraphics\\Models\\Newspaper.obj");
+	paper = Newspaper(vec3(0.3f, 0.3f, 0.0f));
+	newspapers = new Newspaper[10];
+	Newspaper* newspapers = (Newspaper*)malloc(sizeof(Newspaper) * 50);
+	// calling constructor
+	// for each index of array
+	for (int i = 0; i < 50; i++) {
+	///	arr[i] = Newspaper();
+	}
+
+
 }
 
 void mouseCallback(int x, int y) {
@@ -237,16 +259,44 @@ void mouseCallback(int x, int y) {
 
 	if (pitch < -89.0f)
 		pitch = -89.0f;
-
-	camera.ProcessMouseMovement(dx, -dy);
-}
-// Placeholder code for the keypress
-void keypress(unsigned char key, int x, int y) {
-
+	if (camera.thirdPerson == false) {
+		camera.ProcessMouseMovement(dx, -dy, true);
+	}
 }
 
 void keyDown(unsigned char key, int x, int y) {
 	keyStates[key] = true;
+	if (key == 'z') {
+		cout << "z key pressed";
+		camera.thirdPerson = true;
+		camera.originalCamera = false;
+		camera.freeCam = false;
+	}
+	if (key == 'x') {
+		camera.thirdPerson = false;
+		camera.originalCamera = true;
+		camera.freeCam = false;
+		fog = false;
+	}
+	if (key == 'c') {
+		camera.thirdPerson = false;
+		camera.originalCamera = false;
+		camera.freeCam = true;
+		fog = false;
+	}
+	if (key == 'u') {
+		paperboy.throwPapers(paper, myShader, paperboy.remainingPapers);
+	}
+	if (key == 'b') {//move cam backward
+		skyMap = !skyMap;
+	}
+	if (key == 't') {//move cam backward
+		trans = !trans;
+	}
+	if (key == 'f') {//move cam backward
+		fog = !fog;
+	}
+
 }
 
 void keyUp(unsigned char key, int x, int y) {
@@ -262,6 +312,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("Paperboy");
 
 	// Tell glut where the display function is
+
 	glutDisplayFunc(display);
 	glutIdleFunc(updateScene);
 	glutKeyboardFunc(keyDown);

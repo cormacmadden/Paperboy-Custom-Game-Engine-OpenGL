@@ -1,4 +1,5 @@
 #include "PaperBoy.h"
+#include "Newspaper.h"
 
 PaperBoy::PaperBoy(vec3 position)
 {
@@ -87,13 +88,14 @@ void PaperBoy::updatePaperBoyVectors()
 	Up = normalise(cross(Right, Front));
 }
 
-void PaperBoy::throwPapers(Model paper, Shader myShader, int remainingPapers) {
+void PaperBoy::throwPapers(Newspaper paper, Shader myShader, int remainingPapers) {
 	std::cout << "Throwing Papers, papers remaining: " << remainingPapers << '\n';
+	//newspapers.push_front(paper);
 	if (remainingPapers > 0) {
 		mat4 paper_mat = identity_mat4();
 		paper_mat = translate(paper_mat, vec3(0.0, 0.0, 0.0));
 		std::cout << "If statement Reached" << '\n';
-		paper.RenderModel(paper_mat, myShader.ID);
+		paper.renderNewspaper(paper_mat, myShader.ID);
 		std::cout << "Model Rendered: " << '\n';
 		this->remainingPapers--;
 	}

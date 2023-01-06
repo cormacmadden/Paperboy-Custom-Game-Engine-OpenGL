@@ -1,8 +1,10 @@
 #pragma once
-#pragma once
 #include "maths_funcs.h"
 #include "Model.h"
 #include "Utils.h"
+#include "Newspaper.h"
+#include <list>
+
 
 class PaperBoy
 {
@@ -20,6 +22,7 @@ public:
 	GLfloat rotate_y_sin = 00.0f;
 	int remainingPapers = 10;
 	float health;
+	Newspaper newspapers[];
 
 	PaperBoy();
 	PaperBoy(vec3 position);
@@ -27,7 +30,7 @@ public:
 	void renderPaperBoy(mat4 gWVP, int shaderID);
 	void ProcessKeyboard(MovementDir direction, float deltaTime);
 	void MovePaperBoy(int x, int y, float deltaTime);
-	void throwPapers(Model paper, Shader myShader, int remainingPapers);
+	void throwPapers(Newspaper paper, Shader myShader, int remainingPapers);
 
 	void spinWheels(float delta);
 

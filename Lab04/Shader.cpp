@@ -1,6 +1,4 @@
 #include "Shader.h"
-#include "maths_funcs.h"
-#include <vector>
 
 Shader::Shader() {};
 

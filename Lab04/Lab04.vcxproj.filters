@@ -42,6 +42,12 @@
     <ClCompile Include="Paperboy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Newspaper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maths_funcs.h">
@@ -83,6 +89,9 @@
     <ClInclude Include="Paperboy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Newspaper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\simpleFragmentShader.txt">
@@ -92,6 +101,9 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="..\skyShader.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\simpleFragmentShader2.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

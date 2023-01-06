@@ -10,21 +10,11 @@ out vec3 Normal;
 out vec3 FragPos;
 out mat4 World;
 
-struct DirectionalLight
-{
-	vec3 Color;
-	float AmbientIntensity;
-	float DiffuseIntensity;
-	vec3 Direction;
-};
-
 uniform mat4 view;
 uniform mat4 proj;
 uniform mat4 world;
-uniform DirectionalLight gLight;
+uniform float density;
 
-//was 0.007
-const float density = 0.000;
 const float gradient = 1.5;
 
 void main(){

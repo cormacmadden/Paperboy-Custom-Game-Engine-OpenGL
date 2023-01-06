@@ -86,9 +86,11 @@
     <ClCompile Include="maths_funcs.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Newspaper.cpp" />
     <ClCompile Include="Paperboy.cpp" />
     <ClCompile Include="Seal.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WorldTransform.cpp" />
   </ItemGroup>
@@ -99,6 +101,7 @@
     <ClInclude Include="maths_funcs.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Newspaper.h" />
     <ClInclude Include="Paperboy.h" />
     <ClInclude Include="Seal.h" />
     <ClInclude Include="Shader.h" />
@@ -109,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\simpleFragmentShader.txt" />
+    <Text Include="..\simpleFragmentShader2.txt" />
     <Text Include="..\simpleVertexShader.txt" />
     <Text Include="..\skyShader.txt" />
   </ItemGroup>

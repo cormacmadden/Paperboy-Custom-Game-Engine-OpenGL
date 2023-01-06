@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SHADER_H
-#define SHADER_H
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -8,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
 #include "maths_funcs.h"
 
 class Shader
@@ -32,5 +31,3 @@ private:
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	GLuint CompileShader(const char* vertexPath, const char* fragmentPath);
 };
-
-#endif

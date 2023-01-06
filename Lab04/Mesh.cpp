@@ -1,32 +1,3 @@
-// Windows includes (For Time, IO, etc.)
-#include <windows.h>
-#include <mmsystem.h>
-#include <iostream>
-#include <string>
-#include <stdio.h>
-#include <math.h>
-#include <vector> // STL dynamic memory.
-
-// OpenGL includes
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
-
-// Assimp includes
-#include <assimp/cimport.h> // scene importer
-#include <assimp/Importer.hpp> // scene importer
-#include <assimp/scene.h> // collects data
-#include <assimp/postprocess.h> // various extra operations
-
-// Project includes
-#include "maths_funcs.h"
-
-// Project includes
-//#include "obj_parser.h"
-#include "camera.h"
 #include "Mesh.h"
 
 #define ASSIMP_LOAD_FLAGS (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices)

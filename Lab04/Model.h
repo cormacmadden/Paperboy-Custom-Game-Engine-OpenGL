@@ -1,11 +1,6 @@
-
 #pragma once
-//#pragma once
-#ifndef MODEL_H
-#define MODEL_H
 
 #include "assimp/scene.h"
-
 #include <vector> // STL dynamic memory.
 
 // OpenGL includes
@@ -24,6 +19,7 @@
 #include <string>
 #include <stdio.h>
 #include <math.h>
+#include <cassert>
 #include <vector> // STL dynamic memory.
 
 // OpenGL includes
@@ -33,15 +29,15 @@
 #include <iostream>
 #include <sstream>
 
-
 // Assimp includes
 #include <assimp/cimport.h> // scene importer
+#include <assimp/Importer.hpp> // scene importer
 #include <assimp/scene.h> // collects data
 #include <assimp/postprocess.h> // various extra operations
 
 // Project includes
-//#include "obj_parser.h"
-#include "camera.h"
+#include "Mesh.h"
+#include "Camera.h"
 #include "maths_funcs.h"
 //#include "obj_parser.h"
 #include "Shader.h"
@@ -53,7 +49,7 @@ public:
 
 	//Not Used
 	std::vector<Mesh> meshes;
-	std::vector<Mesh> textures;
+	//std::vector<Mesh> textures;
 
 	Model();
 
@@ -120,5 +116,3 @@ private:
 	void LoadSpecularTexture(const string& Dir, const aiMaterial* pMaterial, int index);
 
 };
-
-#endif // !MODEL_H

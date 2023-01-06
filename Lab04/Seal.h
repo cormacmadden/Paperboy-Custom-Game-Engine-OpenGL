@@ -18,8 +18,6 @@ public:
 	GLfloat rotate_y = 0.0f;
 	GLfloat rotate_y_sin = 0.0f;
 	//boid
-
-
 	Seal();
 	Seal(vec3 position);
 	void renderSeal(mat4 gWVP, int shaderID);
