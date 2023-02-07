@@ -113,8 +113,14 @@
   <ItemGroup>
     <Text Include="..\simpleFragmentShader.txt" />
     <Text Include="..\simpleFragmentShader2.txt" />
+    <Text Include="..\simpleFragmentShaderMinnaert.txt" />
+    <Text Include="..\simpleFragmentShaderToon.txt" />
     <Text Include="..\simpleVertexShader.txt" />
     <Text Include="..\skyShader.txt" />
+    <Text Include="frenselFragmentShader.txt" />
+    <Text Include="frenselVertexShader.txt" />
+    <Text Include="skyboxFrag.txt" />
+    <Text Include="skyboxVert.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

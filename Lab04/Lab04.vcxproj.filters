@@ -106,6 +106,24 @@
     <Text Include="..\simpleFragmentShader2.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="..\simpleFragmentShaderToon.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\simpleFragmentShaderMinnaert.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="skyboxFrag.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="skyboxVert.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="frenselFragmentShader.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="frenselVertexShader.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
