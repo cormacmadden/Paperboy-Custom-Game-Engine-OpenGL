@@ -1,3 +1,13 @@
+# Paperboy Game with Custom Game Engine in OpenGL
+<p align="center">
+<img src="Demonstration Material/Paperboy.gif" alt="Crossover Points" width = "70%" height="50%"></img>
+</p>
+
+
+Demo of game progress and code overview:
+
+https://www.youtube.com/watch?v=JIYxIeUEjpk&ab_channel=CormacMadden
+
 ## Displaying 3D Polygon Mesh:
 
 In OpenGL I created a class for models and for meshes so that each model imported cllould
@@ -66,11 +76,14 @@ source, but rather is determined by the overall ambient lighting of the scene. I
 ambient at a value of 1, so that the game stayed bright and cartoonish looking like the
 original.
 
-In Figure X, you can see the diffuse lighting on the side of the pink building. The specular
+You can see in the image below, the diffuse lighting on the side of the pink building. The specular
 highlights from the directional sun light can be seen on the driveway leading up to the house
 and the ambient light is what is used to light the areas that would otherwise be in shade such
 as the front of the two houses.
 
+<p align="center">
+<img src="Demonstration Material/Lighting.jpg" alt="Crossover Points" width = "50%" height="50%"></img>
+</p>
 
 ## Camera Viewpoints
 
@@ -87,3 +100,55 @@ positioning the camera far away.
 
 The third camera I implemented is from a third person perspective of the bike. It is set at a
 fixed distance behind the bike and follows its position and direction as it moves.
+
+<p align="center">
+<img src="Demonstration Material/FPV.jpg" alt="Crossover Points" width = "40%" height="50%"></img>
+<img src="Demonstration Material/Isometric.jpg" alt="Crossover Points" width = "40%" height="50%"></img>
+</p>
+
+## Texturing
+
+I added a texture and a material class to handle the loading of .mtl files and their
+corresponding textures. To demo this I added a texture to the hedges in the game. I was
+unable to scale the UVs and adjust the scale of the texture but it still gives an interesting
+effect. (I could scale down but not up, likely due to memory constraints.)
+The variables of the texture class include the filename, the texture target (2D etc) and the
+texture name.
+
+I created a load function that first loaded the texture image from storage into an array using
+stbi_load from the stb_image public domain library. It first uses glGenTextures to generate a
+texture name. It then uses glBindTexture to bind the new texture name to a texture target.
+It then defines the texture using glTexImage2D. This loads the image data into a texture
+object. It then uses glTexParameter to assign various parameters to the texture such as
+which wrapping and minification and magnification techniques to use. I also created a bind
+function that is called at least once for the specific texture unit. It first sets the current
+TextureUnit as the active texture using glActiveTexture and subsequently binds the texture
+name to the texture target.
+
+
+<p align="center">
+<img src="Demonstration Material/Texturing.jpg" alt="Crossover Points" width = "40%" height="50%"></img>
+</p>
+
+
+## SkySphere
+
+I created a sphere model in blender and texture mapped it with a HDR image of a sky.
+I imported the object into the application and set up the projection and model-view matrices
+so that the sky sphere was always centred around the camera and appears to be infinitely
+far away. I set up a separate shader so that just the diffuse texture would appear.
+
+<p align="center">
+<img src="Demonstration Material/Skysphere.jpg" alt="Crossover Points" width = "60%" height="50%"></img>
+</p>
+
+## Fog
+I implemented the fog in the fragment shader. I used a mix function that blends between the
+background colour and the original fragment colour for each pixel.
+The weight given to the fog is determined by a variable called visibility calculated in the
+vertex shader. The visibility variable is calculated by using the distance from the pixel to the
+camera and a gradient as an exponent.
+
+<p align="center">
+<img src="Demonstration Material/Fog.jpg" alt="Crossover Points" width = "40%" height="50%"></img>
+</p>
